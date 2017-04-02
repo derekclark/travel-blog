@@ -32,7 +32,10 @@ $(document).ready(function() {
           }
            $('.greeting-id').append(data.Items[2].imageName);
            putMarkerOnMap(locations)
-           howManyCountriesHaveIBeenTo(countries)
+           var numberOfCountries = howManyCountriesHaveIBeenTo(countries)
+           document.getElementById("travel-summary").innerHTML = "you have been to "
+             + numberOfCountries + " countries";
+
     });
 });
 
@@ -46,7 +49,18 @@ $(document).ready(function() {
     for(i=0;i<uniqueCountries.length;i++){
       console.log(uniqueCountries[i]);
     }
+    return uniqueCountries.length
   }
+
+  function howManyCitiesHaveIBeenTo(places){
+    var uniquePlaces = places.filter(onlyUnique)
+    console.log("places count=" + uniquePlaces.length);
+    for(i=0;i<uniquePlaces.length;i++){
+      console.log(uniquePlaces[i]);
+    }
+    return uniquePlaces.length
+  }
+
 
   function putMarkerOnMap(locations){
     var map = new google.maps.Map(document.getElementById('map'), {
@@ -85,11 +99,14 @@ $(document).ready(function() {
     }
 
 </script>
+
 <body>
        <div>
            <p class="greeting-id">The ID is </p>
        </div>
-   </body>
+       <p id="travel-summary"></p>
+</body>
+
 
 
 <script async defer
