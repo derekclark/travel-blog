@@ -121,15 +121,11 @@ geocodeCallback = function (results, status) {
     // console.log("type="+results[0].address_components[5].types);
 
     var country = getCountry(results[0])
-
-    if (results[0].address_components[5].types.includes("country")){
-      console.log("country="+results[0].address_components[5].long_name);
-    }else{
-      console.log("country="+results[0].address_components[6].long_name);
-    }
+    var city = getCity(results[0])
+    console.log("city="+city);
 
     this.locations = [
-      [address, this.latitude, this.longitude, 4, this.dateTaken, this.imagename, country]
+      [address, this.latitude, this.longitude, 4, this.dateTaken, this.imagename, country, city]
     ]
     displayLocationDetails(this.locations);
     putMarkerOnMap(this.locations)
@@ -150,6 +146,17 @@ function getCountry(results){
   }
 
 }
+
+function getCity(results){
+  // if country=England then city is [2] postal_town
+  // else use [4] administrative_area_level_1
+
+  if (getCountry(results) === "England"){
+    return results.address_components[2].long_name
+  } else{
+    return results.address_components[3].long_name
+  }
+}
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 8,
@@ -166,9 +173,10 @@ function writeRecord(locations){
       var dateTaken = locations[0][4]
       var imageName = locations[0][5]
       var country = locations[0][6]
+      var city = locations[0][7]
 
       var url="https://u0grunhya8.execute-api.eu-west-1.amazonaws.com/prod/blog?imageName="+imageName+"&lat="+lat+"&long="+long
-      +"&locationDescription="+locationDescription+"&dateTaken="+dateTaken+"&country="+country
+      +"&locationDescription="+locationDescription+"&dateTaken="+dateTaken+"&country="+country+"&city="+city
       console.log(encodeURI(url));
       console.log(url);
       $.ajax({

@@ -15,6 +15,7 @@ exports.handle = function(event, context, callback) {
             "locationDescription": {"S": event.locationDescription},
             "dateTaken": {"S": event.dateTaken},
             "country": {"S": event.country},
+            "city": {"S": event.city},
             "lat" : {"S": event.lat},
             "long" : {"S": event.long}
         }
