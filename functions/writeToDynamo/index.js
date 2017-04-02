@@ -5,7 +5,7 @@
   var dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 //   const docClient = new AWS.DynamoDB.DocumentClient({region: 'eu-west-1'});
 
-exports.handler = function(event, context, callback) {
+exports.handle = function(event, context, callback) {
     var tableName = "MyPlaces";
 
     dynamodb.putItem({
