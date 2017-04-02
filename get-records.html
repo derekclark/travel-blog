@@ -23,7 +23,8 @@ $(document).ready(function() {
           console.log('done')
           for (i=0; i<data.Items.length; i++){
             console.log(data.Items[i].imageName);
-            locations.push(new Array(data.Items[i].imageName, data.Items[i].lat, data.Items[i].long))
+            locations.push(new Array(data.Items[i].imageName, data.Items[i].lat, data.Items[i].long,
+              data.Items[i].dateTaken, data.Items[i].locationDescription))
             console.log("loc="+locations[i][1]);
             console.log(locations.length)
           }
