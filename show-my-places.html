@@ -34,8 +34,8 @@ $(document).ready(function() {
           }
            $('.greeting-id').append(data.Items[2].imageName);
            putMarkerOnMap(locations)
-           var numberOfCountries = howManyCountriesHaveIBeenTo(countries)
-           var numberOfCities = howManyCitiesHaveIBeenTo(cities)
+           var numberOfCountries = uniquePlaces(countries)
+           var numberOfCities = uniquePlaces(cities)
            document.getElementById("travel-summary").innerHTML = "you have been to "
              + numberOfCountries + " countries" + " and " + numberOfCities + " cities.";
 
@@ -46,16 +46,7 @@ $(document).ready(function() {
       return self.indexOf(value) === index;
   }
 
-  function howManyCountriesHaveIBeenTo(countries){
-    var uniqueCountries = countries.filter(onlyUnique)
-    console.log("country count=" + uniqueCountries.length);
-    for(i=0;i<uniqueCountries.length;i++){
-      console.log(uniqueCountries[i]);
-    }
-    return uniqueCountries.length
-  }
-
-  function howManyCitiesHaveIBeenTo(places){
+  function uniquePlaces(places){
     var uniquePlaces = places.filter(onlyUnique)
     console.log("places count=" + uniquePlaces.length);
     for(i=0;i<uniquePlaces.length;i++){
@@ -63,7 +54,6 @@ $(document).ready(function() {
     }
     return uniquePlaces.length
   }
-
 
   function putMarkerOnMap(locations){
     var map = new google.maps.Map(document.getElementById('map'), {
