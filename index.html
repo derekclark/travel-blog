@@ -5,9 +5,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
-Upload a local file to read Exif data.
+Upload multiple files to read Exif data.
 <br/>
-<input id="file-input" type="file" />
+
+<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1">
+   <label>upload file<input type="file" multiple name="file" id="file-input" /></label>
+   <label><input type="submit" name="button" id="button" value="Submit" /></label>
+ </form>
+
 <br/><br/>
 
 <div id="map" style="width: 500px; height: 400px;"></div>
@@ -38,7 +43,12 @@ function displayLocationDetails(location){
 
 var lat, lon;
 document.getElementById("file-input").onchange = function(e) {
-    EXIF.getData(e.target.files[0], function() {
+  var fileList = this.files;
+  for (i=0; i<fileList.length;i++){
+    console.log("uploading file: " + fileList[i].name);
+
+    console.log(e.target.files[0]);
+    EXIF.getData(fileList[i], function() {
       var lat = EXIF.getTag(this, "GPSLatitude");
       var latRef = EXIF.getTag(this, "GPSLatitudeRef");
       var lon = EXIF.getTag(this, "GPSLongitude");
@@ -57,6 +67,7 @@ document.getElementById("file-input").onchange = function(e) {
       reverseGeocode(geocoder, lat, lon, locations, dateTaken, imagename);
       console.log("loc="+locations.length);
     });
+  }
 }
 
 function putMarkerOnMap(locations){
