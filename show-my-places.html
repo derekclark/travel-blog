@@ -11,6 +11,7 @@
 
 var locations=new Array();
 var countries = new Array();
+var cities = new Array();
 $(document).ready(function() {
     $.ajax({
         type:  "GET",
@@ -27,14 +28,16 @@ $(document).ready(function() {
             locations.push(new Array(data.Items[i].imageName, data.Items[i].lat, data.Items[i].long,
               data.Items[i].dateTaken, data.Items[i].locationDescription))
             countries.push(data.Items[i].country);
+            cities.push(data.Items[i].city);
             console.log("loc="+locations[i][1]);
             console.log(locations.length)
           }
            $('.greeting-id').append(data.Items[2].imageName);
            putMarkerOnMap(locations)
            var numberOfCountries = howManyCountriesHaveIBeenTo(countries)
+           var numberOfCities = howManyCitiesHaveIBeenTo(cities)
            document.getElementById("travel-summary").innerHTML = "you have been to "
-             + numberOfCountries + " countries";
+             + numberOfCountries + " countries" + " and " + numberOfCities + " cities.";
 
     });
 });
