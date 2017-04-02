@@ -123,37 +123,7 @@ function initMap() {
 
 </script>
 
-<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.20.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script type="text/javascript">
-   // Configure AWS SDK for JavaScript
-   AWS.config.update({region: 'eu-west-1'});
-   AWS.config.credentials = new AWS.CognitoIdentityCredentials({IdentityPoolId: 'eu-west-1:e4f4cab6-ec99-4904-800d-6dc2f5091cf5'});
 
-   var pullReturned = null;
-   var slotResults;
-   var isSpinning = false;
-
-   // Prepare to call Lambda function
-   var lambda = new AWS.Lambda({region: 'eu-west-1', apiVersion: '2015-03-31'});
-   var pullParams = {
-      FunctionName : 'travel-blog_writeToDynamo',
-      InvocationType : 'RequestResponse',
-      LogType : 'None'
-   };
-
-   function initiatePull() {
-      // Call the Lambda function to collect the spin results
-      lambda.invoke(pullParams, function(err, data) {
-         if (err) {
-            prompt(err);
-         } else {
-            console.log('lambda invoked ok');
-         }
-      });
-   }
-
-</script>
 
 <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvCwwIejOx2UGOzvd9BgP11m38bb2rXzw&callback=initMap">
