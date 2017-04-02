@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+<head>
+<script type="text/javascript" src="exif.js"></script>
+
+</head>
+<body>
+Upload a local file to read Exif data.
+<br/>
+<input id="file-input" type="file" />
+<br/><br/>
+
+<div id="map" style="width: 500px; height: 400px;"></div>
+
+<script>
+function getLat(lat, latRef)
+{
+  latRef = latRef || "N";
+  return (lat[0] + lat[1]/60 + lat[2]/3600) * (latRef == "N" ? 1 : -1);
+}
+
+function getLon(lon, lonRef)
+{
+  lonRef = lonRef || "W";
+  return (lon[0] + lon[1]/60 + lon[2]/3600) * (lonRef == "W" ? -1 : 1);
+}
+
+function sleep(seconds){
+  var waitTill = new Date(new Date().getTime() + seconds * 1000);
+  while(waitTill > new Date()){}
+}
+
+function displayLocationDetails(location){
+  for (i=0; i<4; i++){
+    console.log('loc='+location[0][i]);
+  }
+}
+
+var lat, lon;
+document.getElementById("file-input").onchange = function(e) {
+    EXIF.getData(e.target.files[0], function() {
+      var lat = EXIF.getTag(this, "GPSLatitude");
+      var latRef = EXIF.getTag(this, "GPSLatitudeRef");
+      var lon = EXIF.getTag(this, "GPSLongitude");
+      var lonRef = EXIF.getTag(this, "GPSLongitudeRef");
+      var dateTaken = EXIF.getTag(this, "DateTimeOriginal");
+
+      console.log('converted lat='+getLat(lat, latRef));
+      console.log('converted lon='+getLon(lon, lonRef));
+      lat=getLat(lat, latRef);
+      lon=getLon(lon, lonRef);
+      var geocoder = new google.maps.Geocoder;
+      var locations = [];
+      reverseGeocode(geocoder, lat, lon, locations);
+      console.log("loc="+locations.length);
+    });
+}
+
+function putMarkerOnMap(locations){
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 1,
+    center: new google.maps.LatLng(50, 0),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+
+  var infowindow = new google.maps.InfoWindow();
+
+  var marker, i;
+
+  for (i = 0; i < locations.length; i++) {
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+      map: map
+    });
+
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      return function() {
+        infowindow.setContent(locations[i][0]);
+        infowindow.open(map, marker);
+      }
+    })(marker, i));
+  }
+
+}
+function reverseGeocode(geocoder, lat, long, locationDetails) {
+  var latlng = {lat: parseFloat(lat), lng: parseFloat(long)};
+  var address="initial";
+  var results;
+  var status;
+  geocoder.geocode({'location': latlng}, geocodeCallback.bind({latitude:lat, longitude:long, locations:locationDetails}));
+  console.log("AT END OF FUNCTION address="+address);
+}
+
+geocodeCallback = function (results, status) {
+  if (status === 'OK') {
+    console.log("REPLY FROM GEOCCODER - ok " + results[0].formatted_address);
+    address="ok";
+    address = results[0].formatted_address;
+    console.log(results[0].formatted_address);
+    console.log(results[0].geometry.location.lng());
+    console.log(results[0].geometry.location.lat());
+    console.log(results[0].address_components[1].long_name);
+    this.locations = [
+      [address, this.latitude, this.longitude, 4]
+    ]
+    displayLocationDetails(this.locations);
+    putMarkerOnMap(this.locations)
+  } else {
+    window.alert('Geocoder failed due to: ' + status);
+    address="failed";
+  }
+  console.log("IN FUNCTION AT END OF CALLBACK ADDRESS="+address);
+}
+
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 8,
+    center: {lat: 40.731, lng: -73.997}
+  });
+  var geocoder = new google.maps.Geocoder;
+  var infowindow = new google.maps.InfoWindow;
+}
+
+</script>
+
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.20.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript">
+   // Configure AWS SDK for JavaScript
+   AWS.config.update({region: 'eu-west-1'});
+   AWS.config.credentials = new AWS.CognitoIdentityCredentials({IdentityPoolId: 'eu-west-1:e4f4cab6-ec99-4904-800d-6dc2f5091cf5'});
+
+   var pullReturned = null;
+   var slotResults;
+   var isSpinning = false;
+
+   // Prepare to call Lambda function
+   var lambda = new AWS.Lambda({region: 'eu-west-1', apiVersion: '2015-03-31'});
+   var pullParams = {
+      FunctionName : 'travel-blog_writeToDynamo',
+      InvocationType : 'RequestResponse',
+      LogType : 'None'
+   };
+
+   function initiatePull() {
+      // Call the Lambda function to collect the spin results
+      lambda.invoke(pullParams, function(err, data) {
+         if (err) {
+            prompt(err);
+         } else {
+            console.log('lambda invoked ok');
+         }
+      });
+   }
+
+</script>
+
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvCwwIejOx2UGOzvd9BgP11m38bb2rXzw&callback=initMap">
+</script>
+
+
+</body>
+</html>

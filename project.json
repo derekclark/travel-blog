@@ -1,0 +1,8 @@
+{
+  "name": "travel-blog",
+  "description": "",
+  "memory": 128,
+  "timeout": 5,
+  "role": "arn:aws:iam::782879011243:role/travel-blog_lambda_function",
+  "environment": {}
+}
