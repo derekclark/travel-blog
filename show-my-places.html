@@ -10,6 +10,7 @@
 <script>
 
 var locations=new Array();
+var countries = new Array();
 $(document).ready(function() {
     $.ajax({
         type:  "GET",
@@ -25,15 +26,27 @@ $(document).ready(function() {
             console.log(data.Items[i].imageName);
             locations.push(new Array(data.Items[i].imageName, data.Items[i].lat, data.Items[i].long,
               data.Items[i].dateTaken, data.Items[i].locationDescription))
+            countries.push(data.Items[i].country);
             console.log("loc="+locations[i][1]);
             console.log(locations.length)
           }
            $('.greeting-id').append(data.Items[2].imageName);
            putMarkerOnMap(locations)
+           howManyCountriesHaveIBeenTo(countries)
     });
-
-
 });
+
+  function onlyUnique(value, index, self) {
+      return self.indexOf(value) === index;
+  }
+
+  function howManyCountriesHaveIBeenTo(countries){
+    var uniqueCountries = countries.filter(onlyUnique)
+    console.log("country count=" + uniqueCountries.length);
+    for(i=0;i<uniqueCountries.length;i++){
+      console.log(uniqueCountries[i]);
+    }
+  }
 
   function putMarkerOnMap(locations){
     var map = new google.maps.Map(document.getElementById('map'), {
@@ -62,12 +75,6 @@ $(document).ready(function() {
     }
   }
 
-
-    // var xhttp = new XMLHttpRequest();
-    // xhttp.open("GET", "https://u0grunhya8.execute-api.eu-west-1.amazonaws.com/prod/blog", false);
-    // xhttp.setRequestHeader("Content-type", "application/json");
-    // xhttp.send();
-    // var response = JSON.parse(xhttp.responseText);
     function initMap() {
       var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 8,

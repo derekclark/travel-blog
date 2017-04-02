@@ -111,14 +111,16 @@ geocodeCallback = function (results, status) {
     console.log("REPLY FROM GEOCCODER - ok " + results[0].formatted_address);
     address="ok";
     address = results[0].formatted_address;
-    console.log(results[0])
+    console.log("results="+results[0])
     console.log(results[0].formatted_address);
     console.log(results[0].geometry.location.lng());
     console.log(results[0].geometry.location.lat());
     console.log(results[0].address_components[1].long_name);
+    console.log("country="+results[0].address_components[5].long_name);
+    var country=results[0].address_components[5].long_name
 
     this.locations = [
-      [address, this.latitude, this.longitude, 4, this.dateTaken, this.imagename]
+      [address, this.latitude, this.longitude, 4, this.dateTaken, this.imagename, country]
     ]
     displayLocationDetails(this.locations);
     putMarkerOnMap(this.locations)
@@ -146,9 +148,10 @@ function writeRecord(locations){
       var long=locations[0][2]
       var dateTaken = locations[0][4]
       var imageName = locations[0][5]
+      var country = locations[0][6]
 
       var url="https://u0grunhya8.execute-api.eu-west-1.amazonaws.com/prod/blog?imageName="+imageName+"&lat="+lat+"&long="+long
-      +"&locationDescription="+locationDescription+"&dateTaken="+dateTaken
+      +"&locationDescription="+locationDescription+"&dateTaken="+dateTaken+"&country="+country
       console.log(encodeURI(url));
       console.log(url);
       $.ajax({
