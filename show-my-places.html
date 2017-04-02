@@ -37,7 +37,7 @@ $(document).ready(function() {
 
   function putMarkerOnMap(locations){
     var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 1,
+      zoom: 3,
       center: new google.maps.LatLng(50, 0),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
@@ -49,6 +49,7 @@ $(document).ready(function() {
     for (i = 0; i < locations.length; i++) {
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        animation: google.maps.Animation.DROP,
         map: map
       });
 
