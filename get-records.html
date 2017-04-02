@@ -8,6 +8,9 @@
 
 <br/>
 <script>
+
+var locations=new Array();
+locations.push(new Array("hi","1","2"))
 $(document).ready(function() {
     $.ajax({
         type:  "GET",
@@ -18,14 +21,45 @@ $(document).ready(function() {
           // alert(data.toString());
         }
     }).then(function(data) {
-      console.log('done')
-      for (i=0; i<data.Items.length; i++){
-        console.log(data.Items[i].imageName);
-      }
-       $('.greeting-id').append(data.Items[2].imageName);
+          console.log('done')
+          for (i=0; i<data.Items.length; i++){
+            console.log(data.Items[i].imageName);
+            locations.push(new Array(data.Items[i].imageName, data.Items[i].lat, data.Items[i].long))
+            console.log("loc="+locations[i][1]);
+            console.log(locations.length)
+          }
+           $('.greeting-id').append(data.Items[2].imageName);
+           putMarkerOnMap(locations)
     });
+
+
 });
 
+function putMarkerOnMap(locations){
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 1,
+    center: new google.maps.LatLng(50, 0),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+
+  var infowindow = new google.maps.InfoWindow();
+
+  var marker, i;
+
+  for (i = 0; i < locations.length; i++) {
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+      map: map
+    });
+
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      return function() {
+        infowindow.setContent(locations[i][0]);
+        infowindow.open(map, marker);
+      }
+    })(marker, i));
+  }
+}
 
 
     // var xhttp = new XMLHttpRequest();
