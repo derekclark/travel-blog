@@ -4,7 +4,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
-  <div id="map" style="width: 500px; height: 400px;"></div>
+  <div id="map" style="width: 1100px; height: 600px;"></div>
 
 <br/>
 <script>
@@ -34,11 +34,22 @@ $(document).ready(function() {
           }
            $('.greeting-id').append(data.Items[2].imageName);
            putMarkerOnMap(locations)
-           var numberOfCountries = uniquePlaces(countries)
-           var numberOfCities = uniquePlaces(cities)
-           document.getElementById("travel-summary").innerHTML = "you have been to "
-             + numberOfCountries + " countries" + " and " + numberOfCities + " cities.";
+           var uniqueCountries = uniquePlaces(countries)
+           var uniqueCities = uniquePlaces(cities)
 
+           var countryList=""
+           for(i=0; i<uniqueCountries.length;i++){
+             countryList += uniqueCountries[i] + ", "
+           }
+
+           var cityList=""
+           for(i=0; i<uniqueCities.length;i++){
+             cityList += uniqueCities[i] + ", "
+           }
+
+           document.getElementById("travel-summary").innerHTML = "you have been to "
+             + uniqueCountries.length + " countries: " + countryList + " and "
+             + uniqueCities.length + " cities: " + cityList;
     });
 });
 
@@ -52,7 +63,7 @@ $(document).ready(function() {
     for(i=0;i<uniquePlaces.length;i++){
       console.log(uniquePlaces[i]);
     }
-    return uniquePlaces.length
+    return uniquePlaces
   }
 
   function putMarkerOnMap(locations){
@@ -84,8 +95,8 @@ $(document).ready(function() {
 
     function initMap() {
       var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 8,
-        center: {lat: 40.731, lng: -73.997}
+        zoom: 1,
+        center: {lat: 0, lng: 0}
       });
       var geocoder = new google.maps.Geocoder;
       var infowindow = new google.maps.InfoWindow;
@@ -95,9 +106,9 @@ $(document).ready(function() {
 
 <body>
        <div>
-           <p class="greeting-id">The ID is </p>
+         <p id="travel-summary"></p>
+
        </div>
-       <p id="travel-summary"></p>
 </body>
 
 
