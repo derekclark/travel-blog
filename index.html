@@ -116,8 +116,17 @@ geocodeCallback = function (results, status) {
     console.log(results[0].geometry.location.lng());
     console.log(results[0].geometry.location.lat());
     console.log(results[0].address_components[1].long_name);
-    console.log("country="+results[0].address_components[5].long_name);
-    var country=results[0].address_components[5].long_name
+
+    // var country=results[0].address_components[5].long_name
+    // console.log("type="+results[0].address_components[5].types);
+
+    var country = getCountry(results[0])
+
+    if (results[0].address_components[5].types.includes("country")){
+      console.log("country="+results[0].address_components[5].long_name);
+    }else{
+      console.log("country="+results[0].address_components[6].long_name);
+    }
 
     this.locations = [
       [address, this.latitude, this.longitude, 4, this.dateTaken, this.imagename, country]
@@ -133,6 +142,14 @@ geocodeCallback = function (results, status) {
   console.log("IN FUNCTION AT END OF CALLBACK ADDRESS="+address);
 }
 
+function getCountry(results){
+  if (results.address_components[5].types.includes("country")){
+    return results.address_components[5].long_name
+  }else{
+    return results.address_components[6].long_name
+  }
+
+}
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 8,
