@@ -59,54 +59,56 @@ document.getElementById("file-input").onchange = function(e) {
       reverseGeocode(geocoder, lat, lon, locations);
       // console.log('sleeping...');
       // sleep(3);
-      console.log("loc="+locations.length);
-
-
       // while(locations.length<1){
-      //   console.log("locations size = " + locations.length + " sleeping");
+      //   console.log("locations length="+locations.length);
       //   sleep(1);
       // }
+      console.log("loc="+locations.length);
 
+      // displayLocationDetails(locations);
+      // putMarkerOnMap()
 
-
-
-      displayLocationDetails(locations);
-
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 5,
-          center: new google.maps.LatLng(50, 0),
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-
-        var infowindow = new google.maps.InfoWindow();
-
-        var marker, i;
-
-        for (i = 0; i < locations.length; i++) {
-          marker = new google.maps.Marker({
-            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-            map: map
-          });
-
-          google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-              infowindow.setContent(locations[i][0]);
-              infowindow.open(map, marker);
-            }
-          })(marker, i));
-        }
 
     });
 }
 
+function putMarkerOnMap(locations){
+  // locations = [
+  //   ['label',40.731, -1.2313, 4]
+  // ]
 
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 1,
+    center: new google.maps.LatLng(50, 0),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+
+  var infowindow = new google.maps.InfoWindow();
+
+  var marker, i;
+
+  for (i = 0; i < locations.length; i++) {
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+      map: map
+    });
+
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      return function() {
+        infowindow.setContent(locations[i][0]);
+        infowindow.open(map, marker);
+      }
+    })(marker, i));
+  }
+
+}
 function reverseGeocode(geocoder, lat, long, locationDetails) {
   var latlng = {lat: parseFloat(lat), lng: parseFloat(long)};
   var address="initial";
   var results;
   var status;
-  geocoder.geocode({'location': latlng}, geocodeCallback.bind({latitude:lat, longitude:long}));
+  geocoder.geocode({'location': latlng}, geocodeCallback.bind({latitude:lat, longitude:long, locations:locationDetails}));
   console.log("AT END OF FUNCTION address="+address);
 }
 
@@ -121,10 +123,11 @@ geocodeCallback = function (results, status) {
     console.log(results[0].address_components[1].long_name);
     // long = results[0].geometry.location.lng();
     // lat = results[0].geometry.location.lat();
-    locationDetails = [
+    this.locations = [
       [address, this.latitude, this.longitude, 4]
     ]
-    displayLocationDetails(locationDetails);
+    displayLocationDetails(this.locations);
+    putMarkerOnMap(this.locations)
   } else {
     window.alert('Geocoder failed due to: ' + status);
     address="failed";
