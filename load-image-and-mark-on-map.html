@@ -104,15 +104,13 @@ document.getElementById("file-input").onchange = function(e) {
 function reverseGeocode(geocoder, lat, long, locationDetails) {
   var latlng = {lat: parseFloat(lat), lng: parseFloat(long)};
   var address="initial";
-  geocoder.geocode({'location': latlng}, geocodeCallback
-);
-
+  var results;
+  var status;
+  geocoder.geocode({'location': latlng}, geocodeCallback.bind({latitude:lat, longitude:long}));
   console.log("AT END OF FUNCTION address="+address);
-
-
 }
 
-function geocodeCallback(results, status) {
+geocodeCallback = function (results, status) {
   if (status === 'OK') {
     console.log("REPLY FROM GEOCCODER - ok " + results[0].formatted_address);
     address="ok";
@@ -121,10 +119,10 @@ function geocodeCallback(results, status) {
     console.log(results[0].geometry.location.lng());
     console.log(results[0].geometry.location.lat());
     console.log(results[0].address_components[1].long_name);
-    var long = results[0].geometry.location.lng();
-    var lat = results[0].geometry.location.lat();
+    // long = results[0].geometry.location.lng();
+    // lat = results[0].geometry.location.lat();
     locationDetails = [
-      [address, lat, long, 4]
+      [address, this.latitude, this.longitude, 4]
     ]
     displayLocationDetails(locationDetails);
   } else {
@@ -132,7 +130,7 @@ function geocodeCallback(results, status) {
     address="failed";
   }
   console.log("IN FUNCTION AT END OF CALLBACK ADDRESS="+address);
-};
+}
 
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
