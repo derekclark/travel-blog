@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<script type="text/javascript" src="exif.js"></script>
+
+</head>
+<body>
+<img src="IMG_20170227_163002.jpg" id="img1" />
+<pre>Make and model: <span id="makeAndModel"></span></div>
+<br/>
+
+
+<script>
+window.onload=getExif;
+
+function getExif() {
+  console.log("here1");
+    var img1 = document.getElementById("img1");
+    EXIF.getData(img1, function() {
+        var make = EXIF.getTag(this, "Make");
+        console.log("here2"+make);
+        var model = EXIF.getTag(this, "Model");
+        console.log("here");
+        var makeAndModel = document.getElementById("makeAndModel");
+        makeAndModel.innerHTML = `${make} ${model}`;
+    });
+    console.log("here4");
+}
+console.log("here3");
+</script>
+</body>
+</html>

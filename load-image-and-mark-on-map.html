@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+<script type="text/javascript" src="exif.js"></script>
+
+</head>
+<body>
+Upload a local file to read Exif data.
+<br/>
+<input id="file-input" type="file" />
+<br/><br/>
+
+<div id="map" style="width: 500px; height: 400px;"></div>
+
+<script>
+function getLat(lat, latRef)
+{
+  latRef = latRef || "N";
+  return (lat[0] + lat[1]/60 + lat[2]/3600) * (latRef == "N" ? 1 : -1);
+}
+
+function getLon(lon, lonRef)
+{
+  lonRef = lonRef || "W";
+  return (lon[0] + lon[1]/60 + lon[2]/3600) * (lonRef == "W" ? -1 : 1);
+}
+
+var lat, lon;
+document.getElementById("file-input").onchange = function(e) {
+    EXIF.getData(e.target.files[0], function() {
+      var lat = EXIF.getTag(this, "GPSLatitude");
+      var latRef = EXIF.getTag(this, "GPSLatitudeRef");
+      var lon = EXIF.getTag(this, "GPSLongitude");
+      var lonRef = EXIF.getTag(this, "GPSLongitudeRef");
+      var dateTaken = EXIF.getTag(this, "DateTimeOriginal");
+
+      console.log('converted lat='+getLat(lat, latRef));
+      console.log('converted lon='+getLon(lon, lonRef));
+      lat=getLat(lat, latRef);
+      lon=getLon(lon, lonRef);
+      // console.log('loc='+loc[0,0]);
+
+      // console.log("hi"+EXIF.getTag(this, "GPSLatitude"));
+      //   alert(EXIF.pretty(this));
+
+      var geocoder = new google.maps.Geocoder;
+
+
+        var locations = [
+          [dateTaken + " " + reverseGeocode(geocoder, lat, lon), lat, lon, 4]
+        ];
+        for (i=0; i<4; i++){
+          console.log('loc='+locations[0][i]);
+        }
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 5,
+          center: new google.maps.LatLng(50, 0),
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+
+        for (i = 0; i < locations.length; i++) {
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map
+          });
+
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+              infowindow.setContent(locations[i][0]);
+              infowindow.open(map, marker);
+            }
+          })(marker, i));
+        }
+
+    });
+}
+
+function reverseGeocode(geocoder, lat, long) {
+  var latlng = {lat: parseFloat(lat), lng: parseFloat(long)};
+  var address="initial";
+  geocoder.geocode({'location': latlng}, function(results, status) {
+    if (status === 'OK') {
+      console.log("ok " + results[1].formatted_address);
+      address="ok";
+      address = results[1].formatted_address;
+      console.log("address1="+address);
+    } else {
+      window.alert('Geocoder failed due to: ' + status);
+      address="failed";
+    }
+    console.log("address2="+address);
+  }
+);
+  console.log("address3="+address);
+  return address;
+}
+
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 8,
+    center: {lat: 40.731, lng: -73.997}
+  });
+  var geocoder = new google.maps.Geocoder;
+  var infowindow = new google.maps.InfoWindow;
+
+  // document.getElementById('submit').addEventListener('click', function() {
+  //   reverseGeocode(geocoder, map, infowindow);
+  // });
+}
+
+</script>
+
+
+
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvCwwIejOx2UGOzvd9BgP11m38bb2rXzw&callback=initMap">
+</script>
+
+
+</body>
+</html>
