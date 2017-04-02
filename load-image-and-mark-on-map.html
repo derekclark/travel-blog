@@ -25,6 +25,17 @@ function getLon(lon, lonRef)
   return (lon[0] + lon[1]/60 + lon[2]/3600) * (lonRef == "W" ? -1 : 1);
 }
 
+function sleep(seconds){
+  var waitTill = new Date(new Date().getTime() + seconds * 1000);
+  while(waitTill > new Date()){}
+}
+
+function displayLocationDetails(location){
+  for (i=0; i<4; i++){
+    console.log('loc='+location[0][i]);
+  }
+}
+
 var lat, lon;
 document.getElementById("file-input").onchange = function(e) {
     EXIF.getData(e.target.files[0], function() {
@@ -44,14 +55,23 @@ document.getElementById("file-input").onchange = function(e) {
       //   alert(EXIF.pretty(this));
 
       var geocoder = new google.maps.Geocoder;
+      var locations = [];
+      reverseGeocode(geocoder, lat, lon, locations);
+      console.log('sleeping...');
+      sleep(3);
+      console.log("loc="+locations.length);
 
 
-        var locations = [
-          [dateTaken + " " + reverseGeocode(geocoder, lat, lon), lat, lon, 4]
-        ];
-        for (i=0; i<4; i++){
-          console.log('loc='+locations[0][i]);
-        }
+      // while(locations.length<1){
+      //   console.log("locations size = " + locations.length + " sleeping");
+      //   sleep(1);
+      // }
+
+
+
+
+      displayLocationDetails(locations);
+
 
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 5,
@@ -80,24 +100,29 @@ document.getElementById("file-input").onchange = function(e) {
     });
 }
 
-function reverseGeocode(geocoder, lat, long) {
+function reverseGeocode(geocoder, lat, long, locationDetails) {
   var latlng = {lat: parseFloat(lat), lng: parseFloat(long)};
   var address="initial";
-  geocoder.geocode({'location': latlng}, function(results, status) {
+  geocoder.geocode({'location': latlng}, function geocodeCallback(results, status) {
     if (status === 'OK') {
-      console.log("ok " + results[1].formatted_address);
+      console.log("REPLY FROM GEOCCODER - ok " + results[1].formatted_address);
       address="ok";
       address = results[1].formatted_address;
-      console.log("address1="+address);
+      locationDetails = [
+        [address, lat, long, 4]
+      ]
+      displayLocationDetails(locationDetails);
     } else {
       window.alert('Geocoder failed due to: ' + status);
       address="failed";
     }
-    console.log("address2="+address);
+    console.log("IN FUNCTION AT END OF CALLBACK ADDRESS="+address);
   }
 );
-  console.log("address3="+address);
-  return address;
+
+  console.log("AT END OF FUNCTION address="+address);
+
+
 }
 
 function initMap() {
