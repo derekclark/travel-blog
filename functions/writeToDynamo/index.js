@@ -12,6 +12,8 @@ exports.handle = function(event, context, callback) {
         "TableName": tableName,
         "Item" : {
             "imageName": {"S": event.imageName },
+            "locationDescription": {"S": event.locationDescription},
+            "dateTaken": {"S": event.dateTaken},
             "lat" : {"S": event.lat},
             "long" : {"S": event.long}
         }
