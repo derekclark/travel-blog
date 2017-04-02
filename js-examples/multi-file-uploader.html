@@ -1,0 +1,14 @@
+<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1">
+   <label>upload file<input type="file" multiple name="file" id="file" /></label>
+   <label><input type="submit" name="button" id="button" value="Submit" /></label>
+ </form>
+
+   <script>
+   document.getElementById("file").onchange = function(e) {
+     var fileList = this.files;
+     for (i=0; i<fileList.length;i++){
+       console.log(fileList[i].name);
+     }
+   }
+
+   </script>
