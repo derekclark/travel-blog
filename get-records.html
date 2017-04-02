@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+<br/>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        type:  "GET",
+        // dataType: "jsonp",
+        url: "https://u0grunhya8.execute-api.eu-west-1.amazonaws.com/prod/blog",
+        success: function(data){
+          console.log(data);
+          // alert(data.toString());
+        }
+    }).then(function(data) {
+      console.log('done')
+      for (i=0; i<data.Items.length; i++){
+        console.log(data.Items[i].imageName);
+      }
+       $('.greeting-id').append(data.Items[2].imageName);
+    });
+});
+
+
+
+    // var xhttp = new XMLHttpRequest();
+    // xhttp.open("GET", "https://u0grunhya8.execute-api.eu-west-1.amazonaws.com/prod/blog", false);
+    // xhttp.setRequestHeader("Content-type", "application/json");
+    // xhttp.send();
+    // var response = JSON.parse(xhttp.responseText);
+    
+</script>
+<body>
+       <div>
+           <p class="greeting-id">The ID is </p>
+       </div>
+   </body>
+
+
+<!-- <script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvCwwIejOx2UGOzvd9BgP11m38bb2rXzw&callback=initMap">
+</script> -->
+
+
+</body>
+</html>
