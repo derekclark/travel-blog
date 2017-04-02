@@ -4,6 +4,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
+  <div id="map" style="width: 500px; height: 400px;"></div>
+
 <br/>
 <script>
 $(document).ready(function() {
@@ -31,7 +33,15 @@ $(document).ready(function() {
     // xhttp.setRequestHeader("Content-type", "application/json");
     // xhttp.send();
     // var response = JSON.parse(xhttp.responseText);
-    
+    function initMap() {
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 8,
+        center: {lat: 40.731, lng: -73.997}
+      });
+      var geocoder = new google.maps.Geocoder;
+      var infowindow = new google.maps.InfoWindow;
+    }
+
 </script>
 <body>
        <div>
@@ -40,9 +50,9 @@ $(document).ready(function() {
    </body>
 
 
-<!-- <script async defer
+<script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvCwwIejOx2UGOzvd9BgP11m38bb2rXzw&callback=initMap">
-</script> -->
+</script>
 
 
 </body>
