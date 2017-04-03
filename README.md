@@ -11,6 +11,9 @@ Notes on reverse geocoding [link here](https://developers.google.com/maps/docume
 file = index.html
 exif library [link here] (https://github.com/exif-js/exif-js)
 
+DynamoDB; tablename = **MyPlaces**
+partition key = imageName
+
 ## CREATE WEB PAGE TO SHOW TRAVELS
 file=show-my-places.html
 
@@ -32,3 +35,5 @@ click SAVE
 
 Now upload your files which define your website eg. index.html and make them public (ACTIONS>MAKE PUBLIC)
 now try the site by going to its URL in a browser, which is found in S3>PROPERTIES>Endpoint eg. travel-log-777.s3-website-eu-west-1.amazonaws.com
+
+My S3 bucket is called **travel-log-777**
