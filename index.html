@@ -7,6 +7,7 @@
 <script src="scripts/google-api-parser.js"></script>
 <script src="scripts/geocoder.js"></script>
 <script src="scripts/googlemap.js"></script>
+<script src="scripts/exifData.js"></script>
 </head>
 <body>
 Upload multiple files to read Exif data.
@@ -22,29 +23,6 @@ Upload multiple files to read Exif data.
 <div id="map" style="width: 500px; height: 400px;"></div>
 
 <script>
-  function getLat(lat, latRef)
-  {
-    latRef = latRef || "N";
-    return (lat[0] + lat[1]/60 + lat[2]/3600) * (latRef == "N" ? 1 : -1);
-  }
-
-  function getLon(lon, lonRef)
-  {
-    lonRef = lonRef || "W";
-    return (lon[0] + lon[1]/60 + lon[2]/3600) * (lonRef == "W" ? -1 : 1);
-  }
-
-  function sleep(seconds){
-    var waitTill = new Date(new Date().getTime() + seconds * 1000);
-    while(waitTill > new Date()){}
-  }
-
-  function displayLocationDetails(location){
-    for (i=0; i<4; i++){
-      console.log('loc='+location[0][i]);
-    }
-  }
-
   var lat, lon;
   document.getElementById("file-input").onchange = function(e) {
     var fileList = this.files;

@@ -29,7 +29,6 @@ geocodeCallback = function (results, status) {
     this.locations = [
       [address, this.latitude, this.longitude, 4, this.dateTaken, this.imagename, country, city]
     ]
-    displayLocationDetails(this.locations);
     putMarkerOnMap(this.locations)
     writeRecord(this.imagename, address, this.latitude,
       this.longitude, this.dateTaken, country, city)
