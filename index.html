@@ -129,8 +129,8 @@ Upload multiple files to read Exif data.
       ]
       displayLocationDetails(this.locations);
       putMarkerOnMap(this.locations)
-      writeRecord(this.locations)
-      // insert(this.locations)
+      writeRecord(this.imagename, address, this.latitude,
+        this.longitude, this.dateTaken, country, city)
     } else {
       window.alert('Geocoder failed due to: ' + status);
       address="failed";
@@ -166,14 +166,8 @@ Upload multiple files to read Exif data.
     var infowindow = new google.maps.InfoWindow;
   }
 
-  function writeRecord(locations){
-        var locationDescription=locations[0][0]
-        var lat=locations[0][1]
-        var long=locations[0][2]
-        var dateTaken = locations[0][4]
-        var imageName = locations[0][5]
-        var country = locations[0][6]
-        var city = locations[0][7]
+  function writeRecord(imageName, locationDescription, lat, long, dateTaken, country, city){
+
 
         var url="https://u0grunhya8.execute-api.eu-west-1.amazonaws.com/prod/blog?imageName="+imageName+"&lat="+lat+"&long="+long
         +"&locationDescription="+locationDescription+"&dateTaken="+dateTaken+"&country="+country+"&city="+city
