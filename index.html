@@ -1,45 +1,41 @@
 <!doctype html>
 <html>
-<head>
-<script type="text/javascript" src="exif.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="scripts/persistenceWS.js"></script>
-<script src="scripts/google-api-parser.js"></script>
-<script src="scripts/geocoder.js"></script>
-<script src="scripts/googlemap.js"></script>
-<script src="scripts/exifData.js"></script>
-</head>
-<body>
-Upload multiple files to read Exif data.
-<br/>
+  <head>
+    <script type="text/javascript" src="exif.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="scripts/persistenceWS.js"></script>
+    <script src="scripts/google-api-parser.js"></script>
+    <script src="scripts/geocoder.js"></script>
+    <script src="scripts/googlemap.js"></script>
+    <script src="scripts/exifData.js"></script>
+  </head>
+  <body>
+      Upload multiple files to read Exif data.
+    <br/>
 
-<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1">
-   <label>upload file<input type="file" multiple name="file" id="file-input" /></label>
-   <label><input type="submit" name="button" id="button" value="Submit" /></label>
- </form>
+    <form action="" method="post" enctype="multipart/form-data" name="form1" id="form1">
+       <label>upload file<input type="file" multiple name="file" id="file-input" /></label>
+       <label><input type="submit" name="button" id="button" value="Submit" /></label>
+     </form>
 
-<br/><br/>
+    <div id="map" style="width: 500px; height: 400px;"></div>
 
-<div id="map" style="width: 500px; height: 400px;"></div>
+    <script>
+      var lat, lon;
+      document.getElementById("file-input").onchange = function(e) {
+        var fileList = this.files;
+        for (i=0; i<fileList.length;i++){
+          console.log("uploading file: " + fileList[i].name);
 
-<script>
-  var lat, lon;
-  document.getElementById("file-input").onchange = function(e) {
-    var fileList = this.files;
-    for (i=0; i<fileList.length;i++){
-      console.log("uploading file: " + fileList[i].name);
+          console.log(e.target.files[0]);
+          getEXIF(fileList[i])
+        }
+      }
+    </script>
 
-      console.log(e.target.files[0]);
-      getEXIF(fileList[i])
-    }
-  }
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvCwwIejOx2UGOzvd9BgP11m38bb2rXzw&callback=initMap">
+    </script>
 
-</script>
-
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvCwwIejOx2UGOzvd9BgP11m38bb2rXzw&callback=initMap">
-</script>
-
-
-</body>
+  </body>
 </html>
