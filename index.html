@@ -4,6 +4,7 @@
 <script type="text/javascript" src="exif.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="scripts/writeRecord.js"></script>
+<script src="scripts/google-api-parser.js"></script>
 </head>
 <body>
 Upload multiple files to read Exif data.
@@ -139,25 +140,6 @@ Upload multiple files to read Exif data.
     console.log("IN FUNCTION AT END OF CALLBACK ADDRESS="+address);
   }
 
-  function getCountry(results){
-    if (results.address_components[5].types.includes("country")){
-      return results.address_components[5].long_name
-    }else{
-      return results.address_components[6].long_name
-    }
-
-  }
-
-  function getCity(results){
-    // if country=England then city is [2] postal_town
-    // else use [4] administrative_area_level_1
-
-    if (getCountry(results) === "England"){
-      return results.address_components[2].long_name
-    } else{
-      return results.address_components[3].long_name
-    }
-  }
   function initMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 8,
